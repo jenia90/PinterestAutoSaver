@@ -1,5 +1,7 @@
-<div fxLayout="column" fxFlexAlign="stretch" class="pin-list-container mat-elevation-z4">
-  <div fxFlex *ngFor="let p of pins" class="pin-card">
-    <app-pin [pin]="p" ></app-pin>
+<div *ngIf="pins !== null">
+  <div fxLayout="column" fxFlexAlign="stretch" class="pin-list-container mat-elevation-z4" *ngFor="let p of pins" >
+    <div fxFlex class="pin-card">
+      <app-pin [pin]="p"></app-pin>
+    </div>
   </div>
 </div>

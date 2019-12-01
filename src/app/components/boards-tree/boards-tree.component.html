@@ -1,0 +1,12 @@
+<div>
+  <mat-tree [dataSource]=boards [treeControl]="boardTreeControl">
+    <mat-tree-node *matTreeNodeDef="let node: Board">
+      <mat-checkbox>
+        <div>
+          <img mat-card-image [src]="node.image['60x60']?.url"/>
+          <label>{{ node.name }}</label>
+        </div>
+      </mat-checkbox>
+    </mat-tree-node>
+  </mat-tree>
+</div>

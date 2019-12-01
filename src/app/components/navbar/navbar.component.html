@@ -1,0 +1,25 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <div fxHide.gt-xs>
+        <button mat-icon-button (click)="onToggleSidenav()">
+            <mat-icon>menu</mat-icon>
+        </button>
+    </div>
+    <div>
+      <a [routerLink]="['/']">Pinterest Auto Saver</a>
+    </div>
+    <div fxFlex fxLayout fxLayoutAlign="end" fxHide.xs>
+      <ul fxLayout fxLayoutGap="15px" class="navigation-items">
+        <li *ngIf="!loginState">
+          <a routerLink="/login">Login</a> <!--Check if already logged in-->
+        </li>
+        <li *ngIf="loginState">
+          <a routerLink="/pins" routerLinkActive="[loginState]">Pins</a>
+        </li>
+        <li *ngIf="loginState">
+          <a [href]="[logout()]">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>

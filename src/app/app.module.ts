@@ -8,34 +8,30 @@ import { BoardApiService } from './services/board-api.service';
 import { PinApiService } from './services/pin-api.service';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
-import { CallbackComponent } from './components/login/callback/callback.component';
 import { PinComponent } from './components/pin/pin.component';
-import { MatCardModule } from '@angular/material/card';
-import { MatListModule } from '@angular/material/list';
-import { MatButtonModule } from '@angular/material/button';
-import { MatPaginatorModule } from '@angular/material/paginator'
 import { PinsListComponent } from './components/pins-list/pins-list.component';
-import { FlexLayoutModule } from "@angular/flex-layout";
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { BoardsTreeComponent } from './components/boards-tree/boards-tree.component';
+import { MaterialModule } from './material.module';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    CallbackComponent,
     PinComponent,
-    PinsListComponent
+    PinsListComponent,
+    NavbarComponent,
+    BoardsTreeComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FlexLayoutModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    FlexLayoutModule,
-    MatCardModule,
-    MatListModule,
-    MatPaginatorModule,
-    MatButtonModule
+    MaterialModule
   ],
   providers: [
     AuthService,

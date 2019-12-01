@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,19 +9,17 @@ import { environment } from 'src/environments/environment';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private http: HttpClient) {
-    console.log('LoginComponent Loaded.');
-  }
+  constructor(private auth: AuthService,
+              private router: Router) { }
 
   ngOnInit() {
+    this.login();
   }
 
   public login() {
-    window.open(`https://api.pinterest.com/oauth/?response_type=code\
-&redirect_uri=https://localhost:4200/login/callback\
-&client_id=${environment.clientId}\
-&scope=read_public,write_public\
-&state=768uyFys`);
+    this.auth.login();
+    if (this.auth.isLoggedIn()) {
+      this.router.navigate(['/pins']);
+    }
   }
-
 }

@@ -3,8 +3,10 @@
     <mat-card-title>{{ pin?.note }}</mat-card-title>
     <mat-card-subtitle>{{ pin?.id }}</mat-card-subtitle>
   </mat-card-header>
-  <img mat-card-image [src]="pin?.image['original'].url" />
+  <div class="pin-card-image">
+    <img mat-card-image [src]="pin?.image['original'].url"/>
+  </div>
   <mat-card-actions>
-    <button mat-button >Button</button>
+    <button mat-button [routerLink]="['/boards/'+pin?.id]" >Pin to Boards</button>
   </mat-card-actions>
 </mat-card>
