@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CanActivate } from '@angular/router';
+import { User, UserData } from '../models/user';
+import { Observable } from 'rxjs';
 declare const PDK: any;
 
 const JWT = 'pint_auth_token';
@@ -11,7 +13,7 @@ const JWT = 'pint_auth_token';
 })
 export class AuthService implements CanActivate {
 
-  constructor() {
+  constructor(private http: HttpClient) {
     PDK.init({appId: environment.clientId, cookie: true});
   }
 
@@ -32,9 +34,16 @@ export class AuthService implements CanActivate {
     return !!PDK.getSession() ? PDK.getSession() : JSON.parse(localStorage.getItem(JWT)) as PinterestSession;
   }
 
+  public getLoggedinUser(): Observable<UserData> {
+    return this.http.get<UserData>(`${environment.apiEndpoint}me/?fields=id,username,image`, {headers: this.getAuthorizationHeader()});
+  }
+
   private sessionCallback(session: PinterestSession) {
     if (!!session) {
       localStorage.setItem(JWT, JSON.stringify(session));
+      this.getLoggedinUser().subscribe(o => {
+        console.log(o.data);
+      });
     }
   }
 

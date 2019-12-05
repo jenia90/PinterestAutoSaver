@@ -10,13 +10,13 @@ import { Board } from '../models/board';
 })
 export class BoardApiService {
 
-  private API_ENDPOINT: string = environment.apiEndpoint + 'me/boards/';
+  private API_ENDPOINT: string = environment.apiEndpoint;
 
   constructor(private http: HttpClient,
               private auth: AuthService) { }
 
   public getAllPins(): Observable<BoardData> {
-    const uri = `${this.API_ENDPOINT}fields=id,name,url,image`;
+    const uri = `${this.API_ENDPOINT}me/boards/?fields=id,name,url,image`;
     const data = this.http.get<BoardData>(uri, {headers: this.auth.getAuthorizationHeader()});
     console.log(data);
     return data;
@@ -29,7 +29,10 @@ export class BoardApiService {
   }
 
   public pinToBoard(pinId: number) {
-
+    this.auth.getLoggedinUser().subscribe(ud => {
+      const username = ud.data.username;
+      this.http.post(`${this.API_ENDPOINT}`)
+    });
   }
 }
 
