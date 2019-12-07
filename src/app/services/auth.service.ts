@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { CanActivate } from '@angular/router';
 import { User, UserData } from '../models/user';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 declare const PDK: any;
 
 const JWT = 'pint_auth_token';
@@ -12,6 +13,8 @@ const JWT = 'pint_auth_token';
   providedIn: 'root'
 })
 export class AuthService implements CanActivate {
+
+  public currentUser: User = null;
 
   constructor(private http: HttpClient) {
     PDK.init({appId: environment.clientId, cookie: true});
@@ -27,30 +30,28 @@ export class AuthService implements CanActivate {
   }
 
   public isLoggedIn(): boolean {
-    return !!this.getSession() || !!localStorage.getItem(JWT);
+    return !!this.getSession();
   }
 
   public getSession(): PinterestSession | null {
-    return !!PDK.getSession() ? PDK.getSession() : JSON.parse(localStorage.getItem(JWT)) as PinterestSession;
+    return JSON.parse(localStorage.getItem(JWT)) as PinterestSession;
   }
 
-  public getLoggedinUser(): Observable<UserData> {
-    return this.http.get<UserData>(`${environment.apiEndpoint}me/?fields=id,username,image`, {headers: this.getAuthorizationHeader()});
+  public getLoggedinUser(): Observable<User> {
+    return this.http.get<UserData>(`${environment.apiEndpoint}me/?fields=id,username,image`)
+    .pipe(map(ud => {
+      if (ud.data) {
+        return ud.data;
+      }
+    }));
   }
 
   private sessionCallback(session: PinterestSession) {
-    if (!!session) {
+    if (session) {
       localStorage.setItem(JWT, JSON.stringify(session));
-      this.getLoggedinUser().subscribe(o => {
-        console.log(o.data);
-      });
-    }
-  }
 
-  public getAuthorizationHeader(): HttpHeaders {
-    return new HttpHeaders({
-      Authorization: `bearer ${this.getSession().accessToken}`
-    });
+      // this.getLoggedinUser().subscribe(u => this.currentUser = u);
+    }
   }
 
   public canActivate(): boolean {

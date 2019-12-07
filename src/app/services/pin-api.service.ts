@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
-import { Pin } from '../models/pin';
-import { Observable, from, of } from 'rxjs';
+import { Pin, PinData } from '../models/pin';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Board } from '../models/board';
 
 declare const PDK: any;
@@ -17,14 +18,9 @@ export class PinApiService {
   constructor(private http: HttpClient,
               private auth: AuthService) { }
 
-  public getAllPins(): Observable<PinData> {
-    const uri = `${this.API_ENDPOINT}me/pins/?fields=${[
-      'id', 'link', 'note', 'url',
-      'attribution', 'board', 'color',
-      'counts', 'created_at', 'image',
-      'media', 'metadata', 'original_link'
-      ].join(',')}`;
-    const data = this.http.get<PinData>(uri, {headers: this.auth.getAuthorizationHeader()});
+  public getAllPins(): Observable<Pin[]> {
+    const uri = `${this.API_ENDPOINT}me/pins/?fields=id,link,note,url,board,color,image`;
+    const data = this.http.get<PinData>(uri).pipe(map(ud => ud.data));
     console.log(data);
     return data;
     // if (this.auth.isLoggedIn()) {
@@ -38,8 +34,4 @@ export class PinApiService {
   // public getPinsOnBoard(board: Board): Observable<PinData> {
   //   const uri = `${this.API_ENDPOINT}boards/${this.auth.getSession()}`;
   // }
-}
-
-export interface PinData {
-  data: Pin[];
 }

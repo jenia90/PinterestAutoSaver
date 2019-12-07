@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { BoardApiService, BoardData } from 'src/app/services/board-api.service';
-import { Board } from 'src/app/models/board';
+import { BoardApiService } from 'src/app/services/board-api.service';
+import { Board, BoardData } from 'src/app/models/board';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FlatTreeControl } from '@angular/cdk/tree';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-boards-tree',
@@ -27,10 +28,10 @@ export class BoardsTreeComponent implements OnInit, OnDestroy {
     });
 
     // this.boardsApi.getAllPins().subscribe(b => {
-    //   this.boards = b.data;
+    //   this.boards = b;
     // });
     this.getMockData().subscribe(p => {
-      this.boards = p.data;
+      this.boards = p;
     });
   }
 
@@ -40,7 +41,7 @@ export class BoardsTreeComponent implements OnInit, OnDestroy {
 
 
   private getMockData() {
-    return this.http.get<BoardData>('./assets/mockPins.json');
+    return this.http.get<BoardData>('./assets/mockPins.json').pipe(map(bd => bd.data));
   }
 
 }

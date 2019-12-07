@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
-import { Board } from '../models/board';
+import { BoardData, Board } from '../models/board';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +16,9 @@ export class BoardApiService {
   constructor(private http: HttpClient,
               private auth: AuthService) { }
 
-  public getAllPins(): Observable<BoardData> {
+  public getAllPins(): Observable<Board[]> {
     const uri = `${this.API_ENDPOINT}me/boards/?fields=id,name,url,image`;
-    const data = this.http.get<BoardData>(uri, {headers: this.auth.getAuthorizationHeader()});
+    const data = this.http.get<BoardData>(uri).pipe(map(bd => bd.data));
     console.log(data);
     return data;
     // if (this.auth.isLoggedIn()) {
@@ -29,13 +30,9 @@ export class BoardApiService {
   }
 
   public pinToBoard(pinId: number) {
-    this.auth.getLoggedinUser().subscribe(ud => {
-      const username = ud.data.username;
-      this.http.post(`${this.API_ENDPOINT}`)
-    });
+    const username = this.auth.currentUser.username;
+    if (username) {
+      this.http.post(`${this.API_ENDPOINT}/${username}/${pinId}`, null);
+    }
   }
-}
-
-export interface BoardData {
-  data: Board[];
 }

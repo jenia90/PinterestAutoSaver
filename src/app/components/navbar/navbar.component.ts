@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -9,12 +10,13 @@ import { AuthService } from 'src/app/services/auth.service';
 export class NavbarComponent implements OnInit {
 
   @Output() public sidenavToggle = new EventEmitter();
-  public loginState: boolean;
+
+  private loggedIn: Subject<boolean> = new Subject<boolean>();
 
   constructor(private auth: AuthService) { }
 
   ngOnInit() {
-    this.loginState = this.isLoggedIn();
+    this.loggedIn.next(this.isLoggedIn());
   }
 
   public onToggleSidenav = () => this.sidenavToggle.emit();
@@ -27,7 +29,5 @@ export class NavbarComponent implements OnInit {
 
   public logout() {
     this.auth.logout();
-    this.loginState = this.isLoggedIn();
   }
-
 }

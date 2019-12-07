@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { PinApiService, PinData } from 'src/app/services/pin-api.service';
-import { Pin } from 'src/app/models/pin';
+import { PinApiService } from 'src/app/services/pin-api.service';
+import { Pin, PinData } from 'src/app/models/pin';
 import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 declare const PDK: any;
 
@@ -19,10 +21,7 @@ export class PinsListComponent implements OnInit {
               private http: HttpClient) { }
 
   ngOnInit() {
-    // this.pinService.getAllPins().subscribe(p => {
-    //   const {data} = p as {data: Pin[]};
-    //   this.pins = data;
-    // });
+    this.pinService.getAllPins().subscribe(p => this.pins = p );
     // this.getMockData().subscribe(p => {
     //   console.log(p);
     //   const { data } = p as { data: Pin[] };
@@ -30,11 +29,11 @@ export class PinsListComponent implements OnInit {
     // });
 
     // this.pinService.getAllPins().subscribe(res => this.pins = res.data);
-    this.getMockData().subscribe(p => this.pins = p.data);
+    // this.getMockData().subscribe(p => this.pins = p);
   }
 
-  private getMockData() {
-    return this.http.get<PinData>('./assets/mockPins.json');
+  private getMockData(): Observable<Pin[]> {
+    return this.http.get<PinData>('./assets/mockPins.json').pipe(map(pd => pd.data));
   }
 
 }
